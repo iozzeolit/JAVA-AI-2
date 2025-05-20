@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: . lib/* mssql-jdbc-12.10.0.jre11.jar json-20231013.jar jna-5.12.1.jar jna-platform-5.12.1.jar vosk-0.3.45.jar ./lib/mssql-jdbc-12.10.0.jre11.jar ./lib/json-20231013.jar ./lib/jna-5.12.1.jar ./lib/jna-platform-5.12.1.jar ./lib/vosk-0.3.45.jar
+Add-Opens: java.base/java.lang java.base/java.util
+Add-Exports: java.base/java.lang java.base/java.util

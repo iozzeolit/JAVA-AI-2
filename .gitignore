@@ -1,0 +1,28 @@
+# Compiled class files
+*.class
+
+# Build directory
+/build/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+
+# Exception for libraries
+!lib/*.jar
+/dist/
+/data/
+/ffmpeg/
