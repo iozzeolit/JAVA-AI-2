@@ -25,3 +25,6 @@
 /dist/
 /data/
 /ffmpeg/
+/vosk-models/en/*
+/vosk-models/ja/*
+/vosk-models/vi/*
