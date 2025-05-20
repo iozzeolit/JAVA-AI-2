@@ -1,3 +1,8 @@
+1. Yêu cầu database: SQL Server
+2. Mở file config.properties, tiến hành cấu hình serverName và databaseName
+(serverName lấy từ giao diện đăng nhập của SSMS)
+3. Chạy RunMe.jar để bắt đầu chương trình.
+
 Ứng dụng Java-AI
 ===================
 

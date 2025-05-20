@@ -1,5 +1,3 @@
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -20,9 +18,7 @@ public class RunEnvironment {
         
         // Set up Swing properties
         configureSwing();
-        
-        // Configure logging
-        configureLogging();
+
           // Configure UTF-8 for console output
         try {
             // On Windows, the console may need special handling for UTF-8 output
@@ -73,11 +69,5 @@ public class RunEnvironment {
         } catch (Exception e) {
             // Handle exception if needed
         }
-    }
-    
-    private static void configureLogging() {
-        // Suppress specific warnings from the Win32ShellFolderManager2
-        Logger logger = Logger.getLogger("sun.awt.shell.Win32ShellFolderManager2");
-        logger.setLevel(Level.SEVERE); // Only show severe errors, not warnings
     }
 }
