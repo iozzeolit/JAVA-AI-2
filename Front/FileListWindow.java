@@ -7,11 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -454,20 +458,18 @@ public class FileListWindow extends JFrame {
             }
             
             // Verify file exists
-            File file = new File(filePath);
-            if (!file.exists()) {
+            File file = new File(filePath);            if (!file.exists()) {
                 JOptionPane.showMessageDialog(this,
-                        "File not found: " + filePath,
-                        "File Error",
+                        "Không tìm thấy tập tin: " + filePath,
+                        "Lỗi tập tin",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            // Ask user which player they want to use
-            String[] options = {"System Player", "FFmpeg Player"};
+              // Ask user which player they want to use
+            String[] options = {"Trình phát hệ thống", "Trình phát FFmpeg"};
             int choice = JOptionPane.showOptionDialog(this,
-                    "Which player would you like to use?",
-                    "Choose Player",
+                    "Bạn muốn sử dụng trình phát nào?",
+                    "Chọn trình phát",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null,
@@ -479,28 +481,50 @@ public class FileListWindow extends JFrame {
                 useSystemPlayer(file);
                 return;
             }
-            
-            // User chose FFmpeg, check if it's available
+              // User chose FFmpeg, check if it's available
             boolean ffmpegAvailable = isFFmpegAvailable();
             
             if (!ffmpegAvailable) {
                 // Fall back to Java's built-in capabilities
                 useJavaFallback(file);
                 return;
-            }
-            
-            // Start FFmpeg process
-            ffmpegProcess = new ProcessBuilder("ffmpeg/ffmpeg.exe", "-i", filePath, "-f", "mp3", "-")
+            }              // Start ffplay process for playback
+            ffmpegProcess = new ProcessBuilder("ffmpeg/ffplay.exe", "-autoexit", "-nodisp", filePath)
                     .redirectErrorStream(true)
                     .start();
+            
+            // Show the audio player window
+            AudioPlayerWindow playerWindow = new AudioPlayerWindow(this, filePath);
+            playerWindow.setVisible(true);
+            
+            // Create a thread to monitor the process
+            new Thread(() -> {
+                try {
+                    // Wait for the process to complete
+                    // int exitCode = ffmpegProcess.waitFor();
+                    
+                    // Close the player window when playback ends
+                    SwingUtilities.invokeLater(() -> {
+                        if (playerWindow.isVisible()) {
+                            playerWindow.dispose();
+                        }
+                        
+                        // If there was an error, show an error message
+                        // if (exitCode != 0) {
+                        //     JOptionPane.showMessageDialog(FileListWindow.this,
+                        //         "Lỗi khi phát tệp âm thanh với FFmpeg. Mã lỗi: " + exitCode,
+                        //         "Lỗi phát lại",
+                        //         JOptionPane.ERROR_MESSAGE);
+                        // }
+                    });
+                } catch (Exception _) {
+                    // Thread interrupted, do nothing
+                }
+            }).start();
 
-            // Handle FFmpeg output (e.g., playback or streaming)
-            // ...existing code...
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error initializing playback: " + e.getMessage(),
-                    "Playback Error",
+        } catch (Exception e) {            JOptionPane.showMessageDialog(this,
+                    "Lỗi khởi tạo phát lại: " + e.getMessage(),
+                    "Lỗi phát lại",
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
@@ -526,17 +550,16 @@ public class FileListWindow extends JFrame {
      */    private void useJavaFallback(File file) {
         try {
             // Ask the user if they want to use the system player
-            String[] options = {"Open with System Player", "Cancel"};
-            int response = JOptionPane.showOptionDialog(this,
-                    "How would you like to proceed?",
-                    "Playback Option",
+            String[] options = {"Mở bằng trình phát hệ thống", "Hủy bỏ"};            int response = JOptionPane.showOptionDialog(this,
+                    "Bạn muốn tiếp tục như thế nào?",
+                    "Tùy chọn phát lại",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     options,
-                    options[0]);              if (response == 0) {
+                    options[0]);if (response == 0) {
                 // Open with system player
-                // useSystemPlayer(file);
+                useSystemPlayer(file);
             }
             // If response is 1 or closed, do nothing
               } catch (Exception e) {
@@ -985,18 +1008,147 @@ public class FileListWindow extends JFrame {
         try {
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(file);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "System player is not supported on this platform.",
-                        "Playback Error",
+            } else {                JOptionPane.showMessageDialog(this,
+                        "Trình phát hệ thống không được hỗ trợ trên nền tảng này.",
+                        "Lỗi phát lại",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error opening file with system player: " + e.getMessage(),
-                    "Playback Error",
+        } catch (IOException e) {            JOptionPane.showMessageDialog(this,
+                    "Lỗi khi mở tập tin bằng trình phát hệ thống: " + e.getMessage(),
+                    "Lỗi phát lại",
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Inner class to represent a simple audio player window
+     */
+    private class AudioPlayerWindow extends JDialog {
+        private final String fileName;
+        private final Timer progressTimer;
+        private JProgressBar progressBar;
+        private JLabel timeLabel;
+        private long startTime;
+        private int duration = 0;
+        
+        public AudioPlayerWindow(Frame parent, String filePath) {
+            super(parent, "Đang phát âm thanh", false);
+            this.fileName = new File(filePath).getName();
+            
+            // Set up window
+            setSize(400, 200);
+            setLocationRelativeTo(parent);
+            setLayout(new BorderLayout(10, 10));
+            
+            // Create components
+            JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            
+            // Now playing label with file name
+            JLabel nowPlayingLabel = new JLabel("Đang phát: " + fileName);
+            nowPlayingLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            nowPlayingLabel.setHorizontalAlignment(JLabel.CENTER);
+            mainPanel.add(nowPlayingLabel, BorderLayout.NORTH);
+            
+            // Create a panel for the progress bar and time
+            JPanel progressPanel = new JPanel(new BorderLayout(5, 5));
+            
+            // Progress bar to show playback progress
+            progressBar = new JProgressBar(0, 100);
+            progressBar.setStringPainted(false);
+            progressBar.setValue(0);
+            progressPanel.add(progressBar, BorderLayout.CENTER);
+            
+            // Time label
+            timeLabel = new JLabel("00:00 / 00:00");
+            timeLabel.setHorizontalAlignment(JLabel.CENTER);
+            progressPanel.add(timeLabel, BorderLayout.SOUTH);
+            
+            mainPanel.add(progressPanel, BorderLayout.CENTER);
+            
+            // Button panel
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            
+            // Stop button
+            JButton stopButton = new JButton("Dừng phát");
+            stopButton.setBackground(new Color(220, 53, 69));
+            stopButton.setForeground(Color.WHITE);
+            stopButton.setFocusPainted(false);
+            stopButton.addActionListener(_ -> stopPlayback());
+            buttonPanel.add(stopButton);
+            
+            mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+            add(mainPanel);
+            
+            // Try to get audio duration using ffprobe
+            try {
+                Process ffprobeProcess = new ProcessBuilder(
+                        "ffmpeg/ffprobe.exe", 
+                        "-v", "error", 
+                        "-show_entries", "format=duration", 
+                        "-of", "default=noprint_wrappers=1:nokey=1", 
+                        filePath)
+                    .redirectErrorStream(true)
+                    .start();
+                
+                BufferedReader reader = new BufferedReader(new InputStreamReader(ffprobeProcess.getInputStream()));
+                String line = reader.readLine();
+                if (line != null) {
+                    duration = (int)Float.parseFloat(line);
+                    timeLabel.setText("00:00 / " + formatDuration(duration));
+                    progressBar.setMaximum(duration);
+                }
+                
+                ffprobeProcess.waitFor();
+                
+            } catch (Exception e) {
+                // If duration retrieval fails, set progress bar to indeterminate
+                progressBar.setIndeterminate(true);
+                e.printStackTrace();
+            }
+            
+            // Add window listener to stop playback when window is closed
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    stopPlayback();
+                }
+            });
+            
+            // Start the timer to update the progress bar
+            startTime = System.currentTimeMillis();
+            progressTimer = new Timer(1000, (_) -> updateProgress());
+            progressTimer.start();
+        }
+        
+        private void updateProgress() {
+            if (duration > 0) {
+                int elapsed = (int)((System.currentTimeMillis() - startTime) / 1000);
+                if (elapsed <= duration) {
+                    progressBar.setValue(elapsed);
+                    timeLabel.setText(formatDuration(elapsed) + " / " + formatDuration(duration));
+                }
+            }
+        }
+        
+        private String formatDuration(int seconds) {
+            int minutes = seconds / 60;
+            int remainingSeconds = seconds % 60;
+            return String.format("%02d:%02d", minutes, remainingSeconds);
+        }
+        
+        private void stopPlayback() {
+            if (progressTimer != null) {
+                progressTimer.stop();
+            }
+            
+            if (ffmpegProcess != null && ffmpegProcess.isAlive()) {
+                ffmpegProcess.destroy();
+                ffmpegProcess = null;
+            }
+            
+            dispose();
         }
     }
 }

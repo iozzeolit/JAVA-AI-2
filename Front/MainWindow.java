@@ -104,26 +104,6 @@ public class MainWindow extends JFrame {
         
         return panel;
     }
-      /**
-     * Creates a button that navigates to the file list page
-     * @return JButton configured for file list navigation
-     */
-    private JButton createFileListButton() {
-        JButton button = new JButton("Quản lý tệp MP3");
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setBackground(new Color(70, 130, 180)); // Steel blue
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));        // Add action listener to open file list window
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openFileListWindow();
-            }
-        });
-        
-        return button;
-    }
     
     /**
      * Opens the file list window

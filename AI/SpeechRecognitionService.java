@@ -133,8 +133,8 @@ public class SpeechRecognitionService {    // Cập nhật BASE_MODEL_DIR để 
 
                         // Đảm bảo mã hóa Unicode đúng để lưu vào CSDL
                         byte[] utf8Bytes = recognizedText.getBytes("UTF-8");
-                        String decodedText = new String(utf8Bytes, "UTF-8");                        // In thông tin gỡ lỗi chi tiết
-                        String langInfo = currentLanguage; // Mã ngôn ngữ để gỡ lỗi
+                        String decodedText = new String(utf8Bytes, "UTF-8");                        
+                        // In thông tin gỡ lỗi chi tiết
                         // Tạo chuỗi ký tự Unicode dễ đọc
                         StringBuilder unicodeInfo = new StringBuilder();
                         for (int j = 0; j < recognizedText.length(); j++) {

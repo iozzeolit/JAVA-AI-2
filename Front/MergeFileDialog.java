@@ -5,7 +5,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,12 +13,8 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.sql.ResultSet;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import External.*;
@@ -105,7 +100,7 @@ public class MergeFileDialog extends JDialog {
         headerPanel.add(titleLabel, BorderLayout.CENTER);
         
         JPanel instructionsPanel = new JPanel(new BorderLayout());
-        JLabel instructionsLabel = new JLabel("Hướng dẫn");
+        // JLabel instructionsLabel = new JLabel("Hướng dẫn");
         JTextArea instructionsArea = new JTextArea(
             "Chọn các tệp MP3 để gộp.\n" +
             "Bạn có thể thay đổi thứ tự các tệp bằng cách kéo thả.\n" +
@@ -314,44 +309,6 @@ public class MergeFileDialog extends JDialog {
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
     }
     
-    private void loadFiles() {
-        // Clear the existing list
-        mergeEntries.clear();
-        tableModel.setRowCount(0);
-          // Get all files from the database without restriction
-        Query q = new Query();
-        q.select("rf.[id]");
-        q.select("rf.[dir]");
-        q.from("RecordFile AS rf");
-        
-        try {
-            QDatabase.select(q, new QReaderFunction() {
-                @Override
-                public void Fetch(ResultSet rs) throws Exception {
-                    int id = rs.getInt(1);
-                    String filePath = rs.getString(2);
-                    
-                    MergeEntry entry = new MergeEntry();
-                    entry.fileId = id;
-                    entry.filePath = filePath;
-                    entry.startTime = "00:00:00";
-                    
-                    // Get the duration of the file to set the default end time
-                    String duration = getFileDuration(filePath);
-                    entry.endTime = duration;
-                    
-                    mergeEntries.add(entry);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Lỗi khi tải tệp: " + e.getMessage(),
-                    "Lỗi cơ sở dữ liệu",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
     private void loadSelectedFiles(List<Integer> selectedFileIds) {
         // Clear the existing list
         mergeEntries.clear();
@@ -427,7 +384,7 @@ public class MergeFileDialog extends JDialog {
                 if (selectedRow != -1) {
                     int id = (int) availableFilesTable.getValueAt(selectedRow, 0);
                     String filePath = (String) availableFilesTable.getValueAt(selectedRow, 1);
-                    String status = (String) availableFilesTable.getValueAt(selectedRow, 2);
+                    // String status = (String) availableFilesTable.getValueAt(selectedRow, 2);
                       // Allow adding any file, regardless of analysis status
                     // Add to mergeEntries
                     MergeEntry entry = new MergeEntry();
@@ -947,7 +904,7 @@ public class MergeFileDialog extends JDialog {
         Query q = new Query();
         q.select("rf.[id]");
         q.select("rf.[dir]");
-        q.select("(SELECT COUNT(*) FROM Sentence s WHERE s.recordFileId = rf.id) AS sentenceCount");
+        // q.select("(SELECT COUNT(*) FROM Sentence s WHERE s.recordFileId = rf.id) AS sentenceCount");
         q.from("RecordFile AS rf");
         q.orderBy("rf.[id] DESC");
         
@@ -957,7 +914,7 @@ public class MergeFileDialog extends JDialog {
                 public void Fetch(ResultSet rs) throws Exception {
                     int id = rs.getInt(1);
                     String filePath = rs.getString(2);
-                    int sentenceCount = rs.getInt(3);
+                    // int sentenceCount = rs.getInt(3);
                       // Include all files, regardless of analysis status
                     AvailableFile file = new AvailableFile();
                     file.id = id;
