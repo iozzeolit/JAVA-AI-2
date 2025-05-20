@@ -17,9 +17,9 @@ public class LanguageModelManager {
     // Restrict available languages to English, Japanese, and Vietnamese
     static {
         availableLanguages = new HashMap<>();
-        availableLanguages.put("en", "English");
-        availableLanguages.put("ja", "Japanese");
-        availableLanguages.put("vi", "Vietnamese");
+        availableLanguages.put("en", "Tiếng Anh");
+        availableLanguages.put("ja", "Tiếng Nhật");
+        availableLanguages.put("vi", "Tiếng Việt");
     }
     
     /**

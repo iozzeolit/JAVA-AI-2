@@ -31,21 +31,6 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo Starting application...
 
-REM Run with logging set to only show SEVERE errors, not warnings
-REM Added -Xmx1G for increased memory allocation needed for speech recognition
 java -Xmx1G ^
-     -Djava.library.path=lib ^
-     -Dswing.aatext=true ^
-     -Dawt.useSystemAAFontSettings=on ^
-     -Dsun.awt.disablegrab=true ^
-     -Djava.awt.headless=false ^
-     -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel ^
-     -Dsun.awt.noerasebackground=true ^
-     -Dsun.java2d.noddraw=true ^
-     -Djava.util.Arrays.useLegacyMergeSort=true ^
-     -Dsun.awt.disableMixing=true ^
-     -Djava.util.logging.consoleHandler.level=SEVERE ^
-     -Djava.util.logging.level=SEVERE ^
-     -Djava.util.logging.config.file=logging.properties ^
      -cp "build;.;lib/*" ^
      Main

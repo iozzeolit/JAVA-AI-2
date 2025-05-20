@@ -1,12 +1,13 @@
 1. Yêu cầu database: SQL Server
 2. Mở file config.properties, tiến hành cấu hình serverName và databaseName
-(serverName lấy từ giao diện đăng nhập của SSMS)
+(serverName lấy từ giao diện đăng nhập của SSMS, databaseName phải chưa có
+trong server)
 
 - Tải về file zip FFMPEG, giải nén và copy nội dung
 (gồm 3 file: ffmpeg.exe, ffplay.exe và ffprobe.exe)
 vào thư mục ffmpeg của dự án này
 - Tải VOSK Model cho tiếng Nhật, tiếng Anh và tiếng Việt, giải nén và copy
-nội dung vào các thư mục con của voskmodels/
+nội dung vào các thư mục con của voskm-odels/, bao gồm en, ja và vi
 
 - Chạy RunMe.jar để bắt đầu chương trình.
 

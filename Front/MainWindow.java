@@ -43,13 +43,13 @@ public class MainWindow extends JFrame {
         panel.setBackground(new Color(240, 240, 255)); // Light blue background
         
         // Create title label
-        JLabel titleLabel = new JLabel("Chào mừng đến với Java-AI", JLabel.CENTER);
+        JLabel titleLabel = new JLabel("Nhận diện giọng nói", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
         titleLabel.setForeground(new Color(50, 50, 150)); // Dark blue text
         titleLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0)); // Add some top padding
         
         // Create subtitle
-        JLabel subtitleLabel = new JLabel("Chào mừng bạn đến với ứng dụng", JLabel.CENTER);
+        JLabel subtitleLabel = new JLabel("Chào mừng bạn đến với ứng dụng nhận diện giọng nói", JLabel.CENTER);
         subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         subtitleLabel.setForeground(new Color(100, 100, 100)); // Gray text
         

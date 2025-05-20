@@ -237,14 +237,7 @@ public class FileListWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 playSelectedFile();
             }
-        });        JButton selectLanguageButton = new JButton("Chọn ngôn ngữ");
-        styleButton(selectLanguageButton);
-        selectLanguageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectLanguageModel();
-            }
-        });        // First row
+        });            // First row
         buttonGrid.add(addMp3Button);
         buttonGrid.add(playSelectedButton);
         buttonGrid.add(editSelectedButton);
@@ -253,7 +246,6 @@ public class FileListWindow extends JFrame {
         buttonGrid.add(deleteSelectedButton);
         buttonGrid.add(mergeFilesButton);
         buttonGrid.add(backToMainButton);
-        buttonGrid.add(selectLanguageButton);
         
         // Add the button grid to the main panel
         panel.add(buttonGrid, BorderLayout.CENTER);
@@ -501,7 +493,7 @@ public class FileListWindow extends JFrame {
             new Thread(() -> {
                 try {
                     // Wait for the process to complete
-                    // int exitCode = ffmpegProcess.waitFor();
+                    ffmpegProcess.waitFor();
                     
                     // Close the player window when playback ends
                     SwingUtilities.invokeLater(() -> {
@@ -886,93 +878,6 @@ public class FileListWindow extends JFrame {
         openSentenceEditor(fileId);
     }
 
-    /**
-     * Show language selection dialog and set the selected language
-     */    private void selectLanguageModel() {
-        // First, ensure the model directories are initialized
-        AI.LanguageModelManager.initializeModelDirectories();
-        
-        // Show language selection dialog
-        String selectedLanguage = AI.LanguageModelManager.showLanguageSelector(this);
-        
-        if (selectedLanguage != null) {
-            // Store the selected language for future use
-            try {
-                // Create a properties file to store the selected language
-                Properties props = new Properties();
-                File configFile = new File("config.properties");
-                
-                // Load existing properties if file exists
-                if (configFile.exists()) {
-                    try (FileInputStream in = new FileInputStream(configFile)) {
-                        props.load(in);
-                    }
-                }
-                
-                // Set the language property
-                props.setProperty("speech.language", selectedLanguage);
-                
-                // Save the properties
-                try (FileOutputStream out = new FileOutputStream(configFile)) {
-                    props.store(out, "Speech Recognition Settings");
-                }
-            } catch (Exception ex) {
-                // Ignore errors saving language preference
-            }
-              // Check if the model exists
-            if (!AI.LanguageModelManager.modelExists(selectedLanguage)) {                // Inform user they need to manually add the model
-                JOptionPane.showMessageDialog(this,
-                        "Mô hình nhận dạng giọng nói cho ngôn ngữ " + selectedLanguage + " chưa được cài đặt.\n\n" +
-                        "Để sử dụng ngôn ngữ này, vui lòng tải và thêm thủ công các tệp mô hình vào:\n" +
-                        "vosk-models/" + selectedLanguage + "\n\n" +
-                        "1. Tải mô hình phù hợp từ: https://alphacephei.com/vosk/models\n" +
-                        "2. Tạo thư mục 'vosk-models/" + selectedLanguage + "' nếu nó chưa tồn tại\n" +
-                        "3. Giải nén tất cả tệp mô hình vào thư mục này\n" +
-                        "4. Khởi động lại ứng dụng hoặc chọn lại ngôn ngữ",
-                        "Không tìm thấy mô hình",
-                        JOptionPane.INFORMATION_MESSAGE);
-                
-                // Keep using the current language if available, otherwise suggest using English                if (AI.LanguageModelManager.modelExists(currentLanguage)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Tiếp tục sử dụng ngôn ngữ hiện tại: " + currentLanguage,
-                            "Sử dụng mô hình hiện tại",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else if (AI.LanguageModelManager.modelExists("en")) {
-                    JOptionPane.showMessageDialog(this,
-                            "Mô hình tiếng Anh có sẵn và sẽ được sử dụng làm phương án dự phòng.",
-                            "Sử dụng mô hình tiếng Anh",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    currentLanguage = "en";
-                    // Update the preference
-                    try {
-                        Properties props = new Properties();
-                        File configFile = new File("config.properties");
-                        
-                        // Load existing properties if file exists
-                        if (configFile.exists()) {
-                            try (FileInputStream in = new FileInputStream(configFile)) {
-                                props.load(in);
-                            }
-                        }
-                        
-                        // Set the language property
-                        props.setProperty("speech.language", "en");
-                        
-                        // Save the properties
-                        try (FileOutputStream out = new FileOutputStream(configFile)) {
-                            props.store(out, "Speech Recognition Settings");
-                        }
-                    } catch (Exception ex) {
-                        // Ignore errors saving language preference
-                    }
-                }
-            } else {                JOptionPane.showMessageDialog(this,
-                        "Ngôn ngữ đã chọn: " + selectedLanguage + "\n" +
-                        "Nhận dạng giọng nói sẽ sử dụng mô hình ngôn ngữ này cho các phân tích trong tương lai.",
-                        "Đã chọn ngôn ngữ",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
      /**
      * Show the file merge dialog
      */
