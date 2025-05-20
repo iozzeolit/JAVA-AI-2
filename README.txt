@@ -15,7 +15,7 @@ nội dung vào các thư mục con của voskmodels/
 
 Gói này chứa tất cả các thành phần cần thiết để chạy ứng dụng Java-AI:
 
-- project.jar: Tệp JAR chính của ứng dụng
+- RunMe.jar: Tệp JAR chính của ứng dụng
 - mssql-jdbc_auth-12.10.0.x64.dll: DLL xác thực SQL Server
 - lib/: Thư mục chứa tất cả các thư viện cần thiết
 
