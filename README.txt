@@ -7,7 +7,7 @@ trong server)
 (gồm 3 file: ffmpeg.exe, ffplay.exe và ffprobe.exe)
 vào thư mục ffmpeg của dự án này
 - Tải VOSK Model cho tiếng Nhật, tiếng Anh và tiếng Việt, giải nén và copy
-nội dung vào các thư mục con của voskm-odels/, bao gồm en, ja và vi
+nội dung vào các thư mục con của vosk-models/, bao gồm en, ja và vi
 
 - Chạy RunMe.jar để bắt đầu chương trình.
 
