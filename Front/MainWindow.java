@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 public class MainWindow extends JFrame {
     
     // Title constants
-    private static final String APP_TITLE = "Java-AI Application";
+    private static final String APP_TITLE = "Nhận diện giọng nói bằng Java";
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
     
@@ -39,17 +39,17 @@ public class MainWindow extends JFrame {
      */
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(new Color(240, 240, 255)); // Light blue background
+        // panel.setLayout(new BorderLayout());
+        panel.setBackground(new Color(250, 255, 255)); // Light blue background
         
         // Create title label
-        JLabel titleLabel = new JLabel("Nhận diện giọng nói", JLabel.CENTER);
+        JLabel titleLabel = new JLabel("Nhận diện giọng nói bằng Java", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        titleLabel.setForeground(new Color(50, 50, 150)); // Dark blue text
+        titleLabel.setForeground(new Color(50, 50, 50)); // Dark blue text
         titleLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0)); // Add some top padding
         
         // Create subtitle
-        JLabel subtitleLabel = new JLabel("Chào mừng bạn đến với ứng dụng nhận diện giọng nói", JLabel.CENTER);
+        JLabel subtitleLabel = new JLabel("Chào mừng bạn đến với ứng dụng nhận diện giọng nói bằng Java", JLabel.CENTER);
         subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         subtitleLabel.setForeground(new Color(100, 100, 100)); // Gray text
         
@@ -63,12 +63,12 @@ public class MainWindow extends JFrame {
         textPanel.add(Box.createRigidArea(new Dimension(0, 40))); // Add more spacing
         
         // Create file list button
-        JButton fileListButton = new JButton("Quản lý tệp MP3");
+        JButton fileListButton = new JButton("Bắt đầu");
         fileListButton.setFont(new Font("Arial", Font.BOLD, 16));
-        fileListButton.setBackground(new Color(70, 130, 180)); // Steel blue
+        fileListButton.setBackground(new Color(70, 70, 70)); // Steel blue
         fileListButton.setForeground(Color.WHITE);
         fileListButton.setFocusPainted(false);
-        fileListButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));        // Add action listener to open file list window
+        fileListButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Add action listener to open file list window
         fileListButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,7 +94,7 @@ public class MainWindow extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2, 20, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 40, 40));
-        buttonPanel.setBackground(new Color(240, 240, 255));
+        buttonPanel.setBackground(new Color(250, 250, 250));
         buttonPanel.add(fileListButton);
         buttonPanel.add(exitButton);
 
@@ -110,6 +110,7 @@ public class MainWindow extends JFrame {
      */
     private void openFileListWindow() {
         FileListWindow fileListWindow = new FileListWindow(this);
+        this.setVisible(false); // Hide the main window
         fileListWindow.display();
     }
     

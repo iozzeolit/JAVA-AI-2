@@ -79,6 +79,13 @@ public class FileListWindow extends JFrame {
 
         // Load language preference
         loadLanguagePreference();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                parentWindow.setVisible(true);
+                dispose();
+            }
+        });
         
         // Initialize components
         initComponents();
@@ -124,17 +131,17 @@ public class FileListWindow extends JFrame {
 
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(240, 240, 255));
+        panel.setBackground(new Color(240, 240, 240));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel titleLabel = new JLabel("Quản lý tệp MP3", JLabel.LEFT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setForeground(new Color(50, 50, 150));
+        JLabel titleLabel = new JLabel("Quản lý tệp âm thanh", JLabel.LEFT);
+        titleLabel.setFont(new Font("", Font.BOLD, 24));
+        titleLabel.setForeground(new Color(50, 50, 50));
         panel.add(titleLabel, BorderLayout.WEST);
 
         // Re-added the instructional label for multi-selection
         JLabel selectionLabel = new JLabel("(Giữ Ctrl/Shift để chọn nhiều tệp để gộp)");
-        selectionLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        selectionLabel.setFont(new Font("", Font.ITALIC, 12));
         selectionLabel.setForeground(new Color(100, 100, 100));
         panel.add(selectionLabel, BorderLayout.SOUTH);
 
@@ -146,12 +153,14 @@ public class FileListWindow extends JFrame {
             public boolean isCellEditable(int row, int column) {
                 return false; // Make all columns non-editable
             }
-        };        fileTable = new JTable(tableModel);
+        };       
+         fileTable = new JTable(tableModel);
         fileTable.setRowHeight(30);
         fileTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         fileTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);fileTable.getColumnModel().getColumn(0).setPreferredWidth(80); // ID
         fileTable.getColumnModel().getColumn(1).setPreferredWidth(500); // File Path
         fileTable.getColumnModel().getColumn(2).setPreferredWidth(120); // Status
+        fileTable.setFont(new Font("", Font.PLAIN, 14));
         
         // Setup table selection listener
         setupTableSelectionListener();
@@ -222,11 +231,12 @@ public class FileListWindow extends JFrame {
             }
         });
 
-        JButton backToMainButton = new JButton("Quay lại chính");
+        JButton backToMainButton = new JButton("Quay lại trang chính");
         styleButton(backToMainButton);
         backToMainButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                parentWindow.setVisible(true);
                 dispose();
             }
         });        // Add "Play Selected" button
@@ -254,8 +264,8 @@ public class FileListWindow extends JFrame {
     }
 
     private void styleButton(JButton button) {
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setBackground(new Color(70, 130, 180));
+        button.setFont(new Font("", Font.BOLD, 14));
+        button.setBackground(new Color(70, 70, 70));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
@@ -400,12 +410,12 @@ public class FileListWindow extends JFrame {
 
         var result = new QReaderFunction() {
             @Override
-            public void Fetch(ResultSet rs) throws Exception {                int pos = 1;
+            public void Fetch(ResultSet rs) throws Exception {                
+                int pos = 1;
                 int id = QReader.getInt(rs, pos++);
-                String dir = QReader.getString(rs, pos++);                int sentenceCount = QReader.getInt(rs, pos++);
-
+                String dir = QReader.getString(rs, pos++);                
+                int sentenceCount = QReader.getInt(rs, pos++);
                 String status = sentenceCount > 0 ? "Đã phân tích" : "Chưa phân tích";
-                
                 Object[] rowData = { id, dir, status };
                 tableModel.addRow(rowData);
             }
@@ -414,8 +424,7 @@ public class FileListWindow extends JFrame {
         try {
             QDatabase.select(q, result);        } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "Lỗi lấy dữ liệu: " + e.getMessage(),
-                    "Lỗi cơ sở dữ liệu",
+                    "Lỗi lấy dữ liệu: " + e.getMessage(), "Lỗi cơ sở dữ liệu",
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
@@ -434,6 +443,7 @@ public class FileListWindow extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
                 dispose(); // Close this window if we can't display it properly
+                parentWindow.setVisible(true); // Show the main window again
             }
         });
     }    /**
@@ -567,7 +577,8 @@ public class FileListWindow extends JFrame {
      * Play the selected file in the table
      */
     private void playSelectedFile() {
-        int selectedRow = fileTable.getSelectedRow();        if (selectedRow == -1) {
+        int selectedRow = fileTable.getSelectedRow();        
+        if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn một tập tin để phát.",
                     "Chưa chọn tập tin",
@@ -583,7 +594,8 @@ public class FileListWindow extends JFrame {
      * Analyze the selected file
      */
     private void analyzeSelectedFile() {
-        int selectedRow = fileTable.getSelectedRow();        if (selectedRow == -1) {
+        int selectedRow = fileTable.getSelectedRow();        
+        if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn một tập tin để phân tích.",
                     "Chưa chọn tập tin",
@@ -602,7 +614,7 @@ public class FileListWindow extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         JLabel statusLabel = new JLabel("Đang khởi tạo nhận dạng giọng nói...");
-        statusLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        statusLabel.setFont(new Font("", Font.BOLD, 14));
         
         JProgressBar progressBar = new JProgressBar();
         progressBar.setIndeterminate(true);
@@ -776,11 +788,11 @@ public class FileListWindow extends JFrame {
         resultsDialog.setLocationRelativeTo(this);
           JPanel headerPanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("Các câu đã trích xuất", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setFont(new Font("", Font.BOLD, 18));
         headerPanel.add(titleLabel, BorderLayout.CENTER);
         
         JLabel countLabel = new JLabel(sentences.size() + " câu đã được trích xuất", JLabel.CENTER);
-        countLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        countLabel.setFont(new Font("", Font.PLAIN, 14));
         headerPanel.add(countLabel, BorderLayout.SOUTH);
           // Create table with sentences
         String[] columnNames = {"Thời điểm bắt đầu", "Thời điểm kết thúc", "Nội dung"};
@@ -793,6 +805,7 @@ public class FileListWindow extends JFrame {
         }
         
         JTable sentenceTable = new JTable(data, columnNames);
+        // sentenceTable.setFont(new Font("", Font.PLAIN, 14));
         sentenceTable.getColumnModel().getColumn(0).setPreferredWidth(80);
         sentenceTable.getColumnModel().getColumn(1).setPreferredWidth(80);
         sentenceTable.getColumnModel().getColumn(2).setPreferredWidth(500);
@@ -851,7 +864,8 @@ public class FileListWindow extends JFrame {
     /**
      * Edit the selected file's metadata or content
      */    private void editSelectedFile() {
-        int selectedRow = fileTable.getSelectedRow();        if (selectedRow == -1) {
+        int selectedRow = fileTable.getSelectedRow();        
+        if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                     "Vui lòng chọn một tập tin để chỉnh sửa.",
                     "Chưa chọn tập tin",
@@ -952,7 +966,7 @@ public class FileListWindow extends JFrame {
             
             // Now playing label with file name
             JLabel nowPlayingLabel = new JLabel("Đang phát: " + fileName);
-            nowPlayingLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            nowPlayingLabel.setFont(new Font("", Font.BOLD, 14));
             nowPlayingLabel.setHorizontalAlignment(JLabel.CENTER);
             mainPanel.add(nowPlayingLabel, BorderLayout.NORTH);
             

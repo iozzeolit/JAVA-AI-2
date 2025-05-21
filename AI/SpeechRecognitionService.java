@@ -273,6 +273,7 @@ public class SpeechRecognitionService {    // Cập nhật BASE_MODEL_DIR để 
                 // Lấy văn bản từ trực tiếp từ JSON
                 String wordText = wordObj.getString("word");
 
+                // String method = null;
                 String method = "Windows-1252";
                 try {
                     if (method != null)

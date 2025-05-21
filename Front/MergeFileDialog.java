@@ -182,7 +182,7 @@ public class MergeFileDialog extends JDialog {
         fileDropdown.setForeground(Color.BLACK);
         fileDropdown.setMaximumRowCount(15); // Show more items in dropdown
         fileDropdown.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(70, 130, 180), 2), // Match button color
+            BorderFactory.createLineBorder(new Color(70, 70, 70), 2), // Match button color
             BorderFactory.createEmptyBorder(2, 5, 2, 5)
         ));
         fileDropdown.setRenderer(new DefaultListCellRenderer() {
@@ -303,7 +303,7 @@ public class MergeFileDialog extends JDialog {
     
     private void styleButton(JButton button) {
         button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setBackground(new Color(70, 130, 180));
+        button.setBackground(new Color(70, 70, 70));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));

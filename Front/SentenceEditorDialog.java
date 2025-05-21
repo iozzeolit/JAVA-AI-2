@@ -34,12 +34,11 @@ public class SentenceEditorDialog extends JDialog {
         
         // Create header
         JPanel headerPanel = new JPanel(new BorderLayout());
-        JLabel titleLabel = new JLabel("Edit Extracted Sentences", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel titleLabel = new JLabel("Chỉnh sửa các câu", JLabel.CENTER);
+        titleLabel.setFont(new Font("", Font.BOLD, 20));
         headerPanel.add(titleLabel, BorderLayout.CENTER);
-        
         // Create sentence table
-        String[] columnNames = {"ID", "Start Time", "End Time", "Text"};
+        String[] columnNames = {"ID", "Bắt đầu", "Kết thúc", "Nội dung"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -48,6 +47,7 @@ public class SentenceEditorDialog extends JDialog {
         };
         
         sentenceTable = new JTable(tableModel);
+        sentenceTable.setFont(new Font("", Font.PLAIN, 14));
         sentenceTable.setRowHeight(30);
         sentenceTable.getColumnModel().getColumn(0).setPreferredWidth(50);  // ID
         sentenceTable.getColumnModel().getColumn(1).setPreferredWidth(100); // Start Time
@@ -60,19 +60,19 @@ public class SentenceEditorDialog extends JDialog {
         // Create button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         
-        JButton addButton = new JButton("Add Sentence");
+        JButton addButton = new JButton("Thêm câu");
         styleButton(addButton);
         addButton.addActionListener(_ -> addSentence());
         
-        JButton deleteButton = new JButton("Delete Selected");
+        JButton deleteButton = new JButton("Xóa câu đã chọn");
         styleButton(deleteButton);
         deleteButton.addActionListener(_ -> deleteSentence());
-        
-        JButton saveButton = new JButton("Save Changes");
+
+        JButton saveButton = new JButton("Lưu thay đổi");
         styleButton(saveButton);
         saveButton.addActionListener(_ -> saveChanges());
-        
-        JButton closeButton = new JButton("Close");
+
+        JButton closeButton = new JButton("Đóng");
         styleButton(closeButton);
         closeButton.addActionListener(_ -> dispose());
         
@@ -93,8 +93,8 @@ public class SentenceEditorDialog extends JDialog {
     }
     
     private void styleButton(JButton button) {
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setBackground(new Color(70, 130, 180));
+        button.setFont(new Font("", Font.BOLD, 14));
+        button.setBackground(new Color(70, 70, 70));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
@@ -186,8 +186,8 @@ public class SentenceEditorDialog extends JDialog {
         int selectedRow = sentenceTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a sentence to delete.",
-                    "No Selection",
+                    "Vui lòng chọn một câu để xóa.",
+                    "Không có lựa chọn",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -195,8 +195,8 @@ public class SentenceEditorDialog extends JDialog {
         int sentenceId = (int) tableModel.getValueAt(selectedRow, 0);
         
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete sentence ID " + sentenceId + "?",
-                "Confirm Delete",
+                "Bạn có chắc chắn muốn xóa câu ID " + sentenceId + "?",
+                "Xác nhận xóa",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
                 
@@ -219,14 +219,14 @@ public class SentenceEditorDialog extends JDialog {
                 tableModel.removeRow(selectedRow);
                 
                 JOptionPane.showMessageDialog(this,
-                        "Sentence deleted successfully.",
-                        "Success",
+                        "Câu đã được xóa thành công.",
+                        "Thành công",
                         JOptionPane.INFORMATION_MESSAGE);
                         
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this,
-                        "Error deleting sentence: " + e.getMessage(),
-                        "Database Error",
+                        "Lỗi xóa câu: " + e.getMessage(),
+                        "Lỗi cơ sở dữ liệu",
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
@@ -264,14 +264,14 @@ public class SentenceEditorDialog extends JDialog {
             }
             
             JOptionPane.showMessageDialog(this,
-                    "Changes saved successfully.",
-                    "Success",
+                    "Đã lưu thay đổi.",
+                    "Thành công",
                     JOptionPane.INFORMATION_MESSAGE);
                     
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "Error saving changes: " + e.getMessage(),
-                    "Database Error",
+                    "Lỗi lưu thay đổi: " + e.getMessage(),
+                    "Lỗi cơ sở dữ liệu",
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
