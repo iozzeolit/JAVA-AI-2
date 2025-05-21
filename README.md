@@ -19,17 +19,17 @@ Một ứng dụng desktop nhận diện giọng nói và xử lý ngôn ngữ s
 ### 1. Cấu hình SQL Server
 - Đảm bảo SQL Server đã được cài đặt và đang chạy.
 - Mở `config.properties` và thiết lập `serverName` (lấy từ giao diện đăng nhập SSMS) và `databaseName` (chưa tồn tại trên server).
-- Mở **SQL Server Configuration Manager**:
+- Mở Computer Management (tìm kiếm bằng Windows Search) > Services and Applications > **SQL Server Configuration Manager**:
   - Vào `SQL Server Network Configuration > Protocols for ... > TCP/IP`.
-  - Bật TCP/IP, sau đó ở mục `IPAll`, đặt `TCP Port` thành `1433`.
+  - Bật TCP/IP, rồi nhấn đúp vào TCP/IP, cuộn xuống đến mục `IPAll`, đặt `TCP Port` thành `1433`.
   - Nhấn OK, sau đó khởi động lại dịch vụ SQL Server.
 
 ### 2. Chuẩn bị FFmpeg
-- Tải gói zip FFmpeg.
-- Giải nén và sao chép `ffmpeg.exe`, `ffplay.exe`, `ffprobe.exe` vào thư mục `ffmpeg/` của dự án.
+- Tải gói zip FFmpeg. (truy cập https://github.com/BtbN/FFmpeg-Builds/releases, chọn ffmpeg-master-latest-win64-gpl-shared.zip)
+- Giải nén và sao chép `ffmpeg.exe`, `ffplay.exe`, `ffprobe.exe` từ thư muc `\bin` vào thư mục `ffmpeg/` của dự án.
 
 ### 3. Chuẩn bị mô hình VOSK
-- Tải các mô hình VOSK cho tiếng Anh, Nhật, Việt.
+- Tải các mô hình VOSK cho tiếng Anh, Nhật, Việt. (truy cập https://alphacephei.com/vosk/models)
 - Giải nén từng mô hình vào các thư mục con tương ứng trong `vosk-models/` (`vosk-models/en/`, `vosk-models/ja/`, `vosk-models/vi/`).
 
 ### 4. Chạy ứng dụng

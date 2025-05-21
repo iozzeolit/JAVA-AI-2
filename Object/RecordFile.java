@@ -17,8 +17,7 @@ public class RecordFile extends QDataObj {
     }
 
     @Override
-    public List<String> toList()
-    {
+    public List<String> toList() {
         List<String> list = super.toList();
         list.add(QPiece.conv(id));
         list.add(QPiece.conv(dir));

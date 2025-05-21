@@ -11,7 +11,6 @@ public class QPiece {
     public static String conv(String val) {
         if (val == null)
             return "NULL";
-        // Use UnicodeHelper to escape apostrophes by doubling them for SQL
         val = UnicodeHelper.escapeSqlApostrophes(val);
         return "'" + val + "'";
     }
@@ -19,7 +18,6 @@ public class QPiece {
     public static String convN(String val) {
         if (val == null)
             return "NULL";
-        // Use UnicodeHelper to escape apostrophes by doubling them for SQL
         val = UnicodeHelper.escapeSqlApostrophes(val);
         return "N'" + val + "'";
     }
@@ -27,8 +25,6 @@ public class QPiece {
     public static String conv(Time val) {
         if (val == null)
             return "NULL";
-        // Convert time to string and escape any apostrophes (unlikely but for
-        // consistency)
         String timeStr = val.toString();
         return "'" + UnicodeHelper.escapeSqlApostrophes(timeStr) + "'";
     }
